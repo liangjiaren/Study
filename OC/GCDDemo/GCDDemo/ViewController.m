@@ -1,3 +1,8 @@
+// dispatch_sync : 同步，不具备开启线程的能力
+// dispatch_async : 异步，具备开启线程的能力
+// 并发队列 ：多个任务可以同时执行
+// 串行队列 ：一个任务执行完后，再执行下一个任务
+
 // QOS_CLASS_USER_INTERACTIVE：任务需要被立即执行提供好的体验，用来更新UI，响应事件等。这个等级最好保持小规模。
 // QOS_CLASS_USER_INITIATED：任务由UI发起异步执行。适用场景是需要及时结果同时又可以继续交互的时候。
 // QOS_CLASS_UTILITY：需要长时间运行的任务，伴有用户可见进度指示器。经常会用来做计算，I/O，网络，持续的数据填充等任务。这个任务节能。
@@ -362,6 +367,148 @@
     dispatch_async(secondQueue, ^{
         NSLog(@"3");
         [NSThread sleepForTimeInterval:1];
+    });
+}
+
+/**
+*  async -- 并发队列（最常用）
+*  会不会创建线程：会，一般同时开<多条>
+*  任务的执行方式：并发执行
+*/
+- (void)asyncGlobalQueue
+{
+    // 获得全局的并发队列
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    // 将 任务 添加 全局队列 中去 异步 执行
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片1---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片2---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片3---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片4---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片5---%@", [NSThread currentThread]);
+    });
+}
+
+/**
+ *  async -- 串行队列（有时候用）
+ *  会不会创建线程：会，一般只开<1条>线程
+ *  任务的执行方式：串行执行（一个任务执行完毕后再执行下一个任务）
+ */
+- (void)asyncSerialQueue
+{
+    // 1.创建一个串行队列
+    dispatch_queue_t queue = dispatch_queue_create("queue", NULL);
+    
+    // 2.将任务添加到串行队列中 异步 执行
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片1---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片2---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片3---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片4---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片5---%@", [NSThread currentThread]);
+    });
+}
+
+/**
+ *  async -- 主队列(很常用)
+ */
+- (void)asyncMainQueue
+{
+    // 1.主队列(添加到主队列中的任务，都会自动放到主线程中去执行)
+    dispatch_queue_t queue = dispatch_get_main_queue();
+    
+    // 2.添加 任务 到主队列中 异步 执行
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片1---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片2---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片3---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片4---%@", [NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"-----下载图片5---%@", [NSThread currentThread]);
+    });
+}
+
+
+/**-------------------------------------华丽的分割线-----------------------------------------------------**/
+
+/**
+ *  sync -- 并发队列
+ *  会不会创建线程：不会
+ *  任务的执行方式：串行执行（一个任务执行完毕后再执行下一个任务）
+ *  并发队列失去了并发的功能
+ */
+- (void)syncGlobalQueue
+{
+    // 获得全局的并发队列
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    // 将 任务 添加到 全局并发队列 中 同步 执行
+    dispatch_sync(queue, ^{
+        NSLog(@"-----下载图片1---%@", [NSThread currentThread]);
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"-----下载图片2---%@", [NSThread currentThread]);
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"-----下载图片3---%@", [NSThread currentThread]);
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"-----下载图片4---%@", [NSThread currentThread]);
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"-----下载图片5---%@", [NSThread currentThread]);
+    });
+}
+
+/**
+ *  sync -- 串行队列
+ *  会不会创建线程：不会
+ *  任务的执行方式：串行执行（一个任务执行完毕后再执行下一个任务）
+ */
+- (void)syncSerialQueue
+{
+    // 创建一个串行队列
+    dispatch_queue_t queue = dispatch_queue_create("cn.heima.queue", NULL);
+    
+    // 将 任务 添加到 串行队列 中 同步 执行
+    dispatch_sync(queue, ^{
+        NSLog(@"-----下载图片1---%@", [NSThread currentThread]);
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"-----下载图片2---%@", [NSThread currentThread]);
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"-----下载图片3---%@", [NSThread currentThread]);
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"-----下载图片4---%@", [NSThread currentThread]);
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"-----下载图片5---%@", [NSThread currentThread]);
     });
 }
 
