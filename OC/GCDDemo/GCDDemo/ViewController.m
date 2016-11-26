@@ -117,12 +117,15 @@
 #pragma mark - DISPATCH_SOURCE_TYPE_TIMER
 // NSTimer在主线程的runloop里会在runloop切换其它模式时停止，这时就需要手动在子线程开启一个模式为NSRunLoopCommonModes的runloop，
 // 如果不想开启一个新的runloop可以用不跟runloop关联的dispatch source timer
+// timer必须被持有
 - (void)dispatchSourceTimerDemo
 {
     static dispatch_source_t timer = nil;
     timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, DISPATCH_TARGET_QUEUE_DEFAULT);
     
-    // dispatch_walltime(NULL, 0)
+    // dispatch_walltime(NULL, 0) 等待多长时间开始执行
+    // internal : 间隔
+    // leeway : 就是精度参数，代表系统可以延时的时间间隔，最高精度传0
     dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC, 0);
     
     dispatch_source_set_event_handler(timer, ^{
@@ -130,6 +133,7 @@
     });
     
     dispatch_resume(timer);
+//    dispatch_source_cancel(timer);
     
 }
 
