@@ -19,7 +19,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
  
-    [self deadLockCase5];
+    
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self dispatchGroupNotifyDemo];
 }
 
 #pragma mark - GCD死锁
@@ -252,7 +257,7 @@
     dispatch_group_t group = dispatch_group_create();
     
     dispatch_group_async(group, concurrentQueue, ^{
-        [NSThread sleepForTimeInterval:2];
+        [NSThread sleepForTimeInterval:4];
         NSLog(@"1");
     });
     
@@ -263,6 +268,7 @@
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         NSLog(@"完成");
     });
+    
     
     NSLog(@"继续");
 }
