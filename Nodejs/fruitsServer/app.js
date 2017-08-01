@@ -8,6 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const config = require('./config');
+var mysql = require('mysql')
 
 const app = express();
 
@@ -29,6 +30,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/', require('./routes'));
+
+var connection = mysql.createConnection({
+    host: 'localhost',
+    port: '3306',
+    user: 'root',
+    password: '50839393'
+});
+
+connection.connect(function(err) {
+    if (err) {
+        console.log('error connecting: ' + err.stack);
+        return;
+    }
+
+    console.log('connected as id ' + connection.threadId);
+})
 
 // 打印异常日志
 process.on('uncaughtException', error => {
