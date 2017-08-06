@@ -8,6 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const config = require('./config');
+
 const sql = require('./sql');
 
 const app = express();
@@ -32,8 +33,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/api/v1', require('./routes'));
-
-
 
 // 打印异常日志
 process.on('uncaughtException', error => {
