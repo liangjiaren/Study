@@ -1,0 +1,15 @@
+[{
+        "gift": "按键",
+        "giftID": "01_001",
+        "picture": "./xxxx/xxx/xxx",
+        "points": 1200,
+        "stockout": false
+    },
+    {
+        "gift": "贴膜",
+        "giftID": "01_002",
+        "picture": "./xxxx/xxx/xxx",
+        "points": 600,
+        "stockout": false
+    }
+]

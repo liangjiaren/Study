@@ -3,6 +3,9 @@
 function resFormat(code, msg, res) {
     this.code = code;
     this.msg = msg;
+    if (res == undefined || res == null) {
+        res = {};
+    }
     this.res = res;
 };
 
